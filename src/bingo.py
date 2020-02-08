@@ -1,4 +1,5 @@
 import spotipy
-import numpy as np 
+import numpy as np
 
-
+if __name__ == "__main__":
+    print("hei")
