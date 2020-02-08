@@ -12,7 +12,13 @@ def login():
     else:
         username = input("Spotify username: ")
 
-    token = util.prompt_for_user_token(username, scope)
+    client_id = ''
+    client_secret = ''
+    redirect_uri = 'http://localhost/'
+    token = util.prompt_for_user_token(username, scope,
+                                       client_id=client_id,
+                                       client_secret=client_secret,
+                                       redirect_uri=redirect_uri)
 
     if token:
         sp = spotipy.Spotify(auth=token)
@@ -22,10 +28,12 @@ def login():
             print(track['name'] + ' - ' + track['artists'][0]['name'])
     else:
         print("Can't get token for", username)
+        exit(1)
+    return token
 
-def test():
+def test(token):
     birdy_uri = 'spotify:artist:2WX2uTcsvV5OnS0inACecP'
-    spotify = spotipy.Spotify()
+    spotify = spotipy.Spotify(auth=token)
 
     results = spotify.artist_albums(birdy_uri, album_type='album')
     albums = results['items']
@@ -42,5 +50,5 @@ def loadPrivateEnvFile(privateEnvFile = 'private.env'):
 
 if __name__ == "__main__":
     loadPrivateEnvFile()
-    login()
-    test()
+    token = login()
+    test(token)
